@@ -1,8 +1,8 @@
 #ifndef BOOST_ASTRONOMY_COORDINATE_AFFINE_TRANSFORMATION_HPP
 #define BOOST_ASTRONOMY_COORDINATE_AFFINE_TRANSFORMATION_HPP
 
-//! Header to facilitate basic affine transforms like shear, scale, rotate, translate.
-// Supports Cartesian, Spherical and Spherical Equatorial Represenations.
+//!Header to facilitate basic affine transforms like shear, scale, rotate, translate.
+//Supports Cartesian, Spherical and Spherical Equatorial Represenations.
 
 #include <iostream>
 #include <cmath>
@@ -16,10 +16,12 @@ namespace boost { namespace astronomy { namespace coordinate {
 
 class affine_transformation
 {
-public:
-
+private:    
+   
     //!tranformation matrix
     std::array<std::array<double,4>, 4> transMatrix;
+
+public:
 
     //!Constructor to create an object and to initialize transMatrix
     affine_transformation()
@@ -31,7 +33,7 @@ public:
                                {0,0,0,1} }};
     }
 
-    //! function to update the transMatrix with a new transform
+    //!function to update the transMatrix with a new transform
     void update( std::array<std::array<double,4>, 4> const& matrix )
     {
         std::array<std::array<double,4>, 4> temp;
@@ -121,7 +123,7 @@ public:
         this->update(temp);
     }
 
-    //! function to print the transformation matrix
+    //!function to print the transformation matrix
     void display()
     {
         for( int i = 0 ; i < 4 ; i++ )
