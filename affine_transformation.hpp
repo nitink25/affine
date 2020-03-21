@@ -19,7 +19,7 @@ class affine_transformation
 private:    
    
     //!tranformation matrix
-    std::array<std::array<double,4>, 4> transMatrix;
+    std::array<std::array<long double,4>, 4> transMatrix;
 
 public:
 
@@ -34,9 +34,9 @@ public:
     }
 
     //!function to update the transMatrix with a new transform
-    void update( std::array<std::array<double,4>, 4> const& matrix )
+    void update( std::array<std::array<long double,4>, 4> const& matrix )
     {
-        std::array<std::array<double,4>, 4> temp;
+        std::array<std::array<long double,4>, 4> temp;
 
         //matrix multiplication
         for( int i = 0; i < 4; i++ )
@@ -55,70 +55,70 @@ public:
     }
 
     //!function to apply scaling
-    void scale( double sx, double sy, double sz )
+    void scale( long double sx, long double sy, long double sz )
     {
-        std::array<std::array<double,4>, 4> temp = {{ {sx, 0 , 0 , 0},
-                                                      {0 , sy, 0 , 0},
-                                                      {0 , 0 , sz, 0},
-                                                      {0 , 0 , 0 , 1} }};
+        std::array<std::array<long double,4>, 4> temp = {{ {sx, 0 , 0 , 0},
+                                                           {0 , sy, 0 , 0},
+                                                           {0 , 0 , sz, 0},
+                                                           {0 , 0 , 0 , 1} }};
 
         this->update(temp);
     }
 
     //!function to apply shear
-    void shear( double hxy, double hxz,
-                double hyx, double hyz, 
-                double hzx, double hzy )
+    void shear( long double hxy, long double hxz,
+                long double hyx, long double hyz, 
+                long double hzx, long double hzy )
     {
-        std::array<std::array<double,4>, 4> temp = {{ { 1 ,hxy,hxz,0},
-                                                      {hyx, 1 ,hyz,0},
-                                                      {hzx,hzy, 1 ,0},
-                                                      { 0 , 0 , 0 ,1} }};
+        std::array<std::array<long double,4>, 4> temp = {{ { 1 ,hxy,hxz,0},
+                                                           {hyx, 1 ,hyz,0},
+                                                           {hzx,hzy, 1 ,0},
+                                                           { 0 , 0 , 0 ,1} }};
 
         this->update(temp);
     }
 
     //!function to apply rotation about x-axis
     //only degrees accepted for all rotation functions
-    void rotate_x( double x )
+    void rotate_x( long double x )
     {
-        std::array<std::array<double,4>, 4> temp = {{ {1 , 0 , 0 , 0},
-                                                      {0 ,std::cos(x),-std::sin(x) ,0},
-                                                      {0 ,std::sin(x), std::cos(x),0},
-                                                      {0 , 0 , 0 , 1} }};
+        std::array<std::array<long double,4>, 4> temp = {{ {1 , 0 , 0 , 0},
+                                                           {0 ,std::cos(x),-std::sin(x) ,0},
+                                                           {0 ,std::sin(x), std::cos(x),0},
+                                                           {0 , 0 , 0 , 1} }};
 
         this->update(temp);
     }
 
     //!function to apply rotation about y-axis
-    void rotate_y( double y )
+    void rotate_y( long double y )
     {
-        std::array<std::array<double,4>, 4> temp = {{ { std::cos(y), 0 ,std::sin(y), 0},
-                                                      {0 , 1 , 0 , 0},
-                                                      {-std::sin(y), 0 ,std::cos(y),0},
-                                                      {0 , 0 , 0 , 1} }};
+        std::array<std::array<long double,4>, 4> temp = {{ { std::cos(y), 0 ,std::sin(y), 0},
+                                                           {0 , 1 , 0 , 0},
+                                                           {-std::sin(y), 0 ,std::cos(y),0},
+                                                           {0 , 0 , 0 , 1} }};
 
         this->update(temp);
     }
 
     //!function to apply rotation about z-axis
-    void rotate_z( double z )
+    void rotate_z( long double z )
     {
-        std::array<std::array<double,4>, 4> temp = {{ {std::cos(z),-std::sin(z), 0 , 0},
-                                                      {std::sin(z), std::cos(z), 0 , 0},
-                                                      {0 , 0 , 1 , 0},
-                                                      {0 , 0 , 0 , 1} }};
+        std::array<std::array<long double,4>, 4> temp = {{ {std::cos(z),-std::sin(z), 0 , 0},
+                                                           {std::sin(z), std::cos(z), 0 , 0},
+                                                           {0 , 0 , 1 , 0},
+                                                           {0 , 0 , 0 , 1} }};
 
         this->update(temp);
     }
 
     //!function to apply translation
-    void translate( double dx, double dy, double dz )
+    void translate( long double dx, long double dy, long double dz )
     {
-        std::array<std::array<double,4>, 4> temp = {{ {1 ,0 ,0 ,dx},
-                                                      {0 ,1 ,0 ,dy},
-                                                      {0 ,0 ,1 ,dz},
-                                                      {0 ,0 ,0 ,1 } }};
+        std::array<std::array<long double,4>, 4> temp = {{ {1 ,0 ,0 ,dx},
+                                                           {0 ,1 ,0 ,dy},
+                                                           {0 ,0 ,1 ,dz},
+                                                           {0 ,0 ,0 ,1 } }};
 
         this->update(temp);
     }
@@ -146,14 +146,15 @@ public:
     auto transform( Representation<Args...> const& vector )
     {
         auto tempVector = make_cartesian_representation(vector);
+        typedef decltype(tempVector) temp_type;
 
         //!homogeneous coordinates matrix
-        std::array<double, 4> homoMatrix = { tempVector.get_x().value(),
-                                             tempVector.get_y().value(),
-                                             tempVector.get_z().value(),
-                                             1 };
+        std::array<long double, 4> homoMatrix = { tempVector.get_x().value(),
+                                                  tempVector.get_y().value(),
+                                                  tempVector.get_z().value(),
+                                                  1 };
 
-        std::array<double, 4> tempMatrix = {0,0,0,0};
+        std::array<long double, 4> tempMatrix = {0,0,0,0};
 
         for ( int i = 0 ; i < 4 ; i++ )
         {
@@ -163,12 +164,12 @@ public:
             }   
         }
 
-        tempVector.set_x( tempMatrix.at(0) * 
-            typename decltype(tempVector)::quantity1::unit_type() );
-        tempVector.set_y( tempMatrix.at(1) * 
-            typename decltype(tempVector)::quantity2::unit_type() );
-        tempVector.set_z( tempMatrix.at(2) * 
-            typename decltype(tempVector)::quantity3::unit_type() );
+        tempVector.set_x( static_cast<typename temp_type::type>(tempMatrix.at(0)) * 
+            typename temp_type::quantity1::unit_type() );
+        tempVector.set_y( static_cast<typename temp_type::type>(tempMatrix.at(1)) * 
+            typename temp_type::quantity2::unit_type() );
+        tempVector.set_z( static_cast<typename temp_type::type>(tempMatrix.at(2)) * 
+            typename temp_type::quantity3::unit_type() );
 
         return Representation<Args...>(tempVector);
     }
